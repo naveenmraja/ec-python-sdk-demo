@@ -9,14 +9,9 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 #add api key
-card_api_key = '6BCC9FB7C12E44D2ADBC27DC5F73C45A'
-wallet_api_key = '2DA70837270E4210BD4329D994B7D870'
-card_merchant_id = 'python_sdk_test'
-wallet_merchant_id = 'naveen_juspay'
-api_key = '3E69335A241F49DFAE9C023BAB73D312'
 merchant_id = 'ec_demo'
 config.environment = 'sandbox'
-config.api_key = api_key
+config.api_key = '3E69335A241F49DFAE9C023BAB73D312'
 
 def getCustomerId(): 
 	return "C" + str(random.randint(1000000,2000000))
@@ -45,7 +40,7 @@ def create_order():
 	'customer_id' : cust_id,
 	'customer_phone' : request.args.get('customer_phone'),
 	'customer_email' : request.args.get('customer_email'),
-	'return_url' : 'https://ec-python-demo.herokuapp.com/handle_payment'
+	'return_url' : 'https://ec-sdk-demo.herokuapp.com/handle_payment'
 	}
 	try:
 		order = juspay.Orders.create(**params)
