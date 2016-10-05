@@ -45,7 +45,7 @@ def create_order():
 	'customer_id' : cust_id,
 	'customer_phone' : request.args.get('customer_phone'),
 	'customer_email' : request.args.get('customer_email'),
-	'return_url' : 'http://127.0.0.1:5000/handle_payment'
+	'return_url' : 'https://ec-python-demo.herokuapp.com/handle_payment'
 	}
 	try:
 		order = juspay.Orders.create(**params)
