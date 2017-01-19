@@ -3,6 +3,7 @@ import os
 import json
 import juspay
 from juspay import config
+from juspay import util
 import random
 
 app = Flask(__name__)
@@ -34,15 +35,15 @@ def create_order():
 	cust_id = getCustomerId()
 	if request.args.get('customer_id'):
 		cust_id = request.args.get('customer_id')
-	params = {
-	'order_id' : order_id,
-	'amount' : float(amount),
-	'customer_id' : cust_id,
-	'customer_phone' : request.args.get('customer_phone'),
-	'customer_email' : request.args.get('customer_email'),
-	'return_url' : 'https://ec-sdk-demo.herokuapp.com/handle_payment'
-	}
 	try:
+		params = {
+		'order_id' : order_id,
+		'amount' : float(amount),
+		'customer_id' : cust_id,
+		'customer_phone' : request.args.get('customer_phone'),
+		'customer_email' : request.args.get('customer_email'),
+		'return_url' : 'https://ec-sdk-demo.herokuapp.com/handle_payment'
+		}
 		order = juspay.Orders.create(**params)
 		order = json.dumps(vars(order))
 	except Exception as e:
@@ -92,29 +93,131 @@ def delete_card():
 
 @app.route("/list_wallets")
 def list_wallets():
-	cust_id = getCustomerId()
 	if request.args.get('customer_id'):
-		cust_id = request.args.get('customer_id')
+		customer_id = request.args.get('customer_id')
+		url = '/customers/' + customer_id + '/wallets'
+		try:
+			response = util.request('GET', url, {}).json()
+			print response, response['list']
+			return json.dumps({'wallets' : response['list']})
+		except Exception as e:
+			errorMsg = "Error while getting wallets for customer %s" % customer_id
+			print errorMsg, e.message
+			if "[customer] cannot be null" in e.message:
+				return json.dumps({'Error' : 'Invalid Customer'})
+			else:
+				return json.dumps({'Error' : errorMsg})
+	else:
+		return json.dumps({'Error' : 'Invalid Customer'})
+
+@app.route("/create_customer")
+def create_customer():
+	customer_id = request.args.get('customerId')
+	customer_email = request.args.get('customerEmail')
+	customer_phone = request.args.get('customerPhone')
+	customer_name = request.args.get('customerName')
+	params = {
+	"object_reference_id" : customer_id,
+	"mobile_number" : customer_phone,
+	"email_address" : customer_email,
+	"first_name" : customer_name if customer_name else "fname",
+	"last_name" : customer_name if customer_name else "lname"
+	}
 	try:
-		wallets = juspay.Wallets.list(customer_id = cust_id)
-		wallets = map(lambda wallet : json.dumps(vars(wallet)),wallets)
-		return json.dumps({'wallets':wallets})
+		customer = juspay.Customers.create(**params)
+		customer = json.dumps(vars(customer))
+		print customer
 	except Exception as e:
-		errorMsg = "Error while retrieving wallets for customerId %s ." % cust_id
+		errorMsg = 'Error while creating customer'
+		print errorMsg, e
+		customer = json.dumps({'Error' : errorMsg})
+	return json.dumps({'customer' : customer})
+
+@app.route("/create_wallet")
+def create_wallet():
+	customer_id = request.args.get('customer_id')
+	if not customer_id:
+		return json.dumps({'Error' : 'Invalid Customer'}) 
+	wallet = request.args.get('wallet')
+	params = {
+	'gateway' : wallet
+	}
+	url = '/customers/' + customer_id + '/wallets'
+	try:
+		response = util.request('POST', url, params).json()
+		print response
+		return json.dumps(response)
+	except Exception as e:
+		errorMsg = "Error while creating wallet for customer %s" % customer_id
+		print errorMsg, e
+		if "Input customerId is invalid" in e.message:
+			return json.dumps({'Error' : 'Invalid Customer'})
+		else:
+			return json.dumps({'Error' : errorMsg})
+
+@app.route("/authenticate_wallet")
+def authenticate_wallet():
+	wallet_id = request.args.get('wallet_id')
+	params = {
+	'command' : 'authenticate'
+	}
+	url = '/wallets/' + wallet_id
+	try :
+		response = util.request('POST', url, params).json()
+		print response
+		return json.dumps(response)
+	except Exception as e:
+		errorMsg = "Error while authenticating wallet : %s" % wallet_id
 		print errorMsg, e
 		return json.dumps({'Error' : errorMsg})
 
-@app.route("/refresh_wallets")
-def refresh_wallets():
-	cust_id = getCustomerId()
-	if request.args.get('customer_id'):
-		cust_id = request.args.get('customer_id')
+@app.route("/link_wallet")
+def link_wallet():
+	wallet_id = request.args.get('wallet_id')
+	otp = request.args.get('otp')
+	params = {
+	'command' : 'link',
+	'otp' : otp
+	}
+	url = '/wallets/' + wallet_id
 	try:
-		wallets = juspay.Wallets.refreshBalance(customer_id = cust_id)
-		wallets = map(lambda wallet : json.dumps(vars(wallet)),wallets)
-		return json.dumps({'wallets':wallets})
+		response = util.request('POST', url, params).json()
+		print response
+		return json.dumps(response)
 	except Exception as e:
-		errorMsg = "Error while refreshing Wallet Balance for customerId %s ." % cust_id
+		errorMsg = "Error while linking wallet %s" % wallet_id
+		print errorMsg, e
+		return json.dumps({'Error' : errorMsg})
+
+@app.route("/delink_wallet")
+def delink_wallet():
+	wallet_id = request.args.get('wallet_id')
+	params = {
+	'command' : 'delink'
+	}
+	url = '/wallets/' + wallet_id
+	try:
+		response = util.request('POST', url, params).json()
+		print response
+		return json.dumps(response)
+	except Exception as e:
+		errorMsg = "Error while delinking wallet %s" % wallet_id
+		print errorMsg, e
+		return json.dumps({'Error' : errorMsg})
+
+@app.route("/refresh_wallet")
+def refresh_wallet():
+	wallet_id = request.args.get('wallet_id')
+	params = {
+	'command' : 'refresh'
+	}
+	url = '/wallets/' + wallet_id
+	try:
+		response = util.request('POST', url, params).json()
+		print response
+		return json.dumps(response)
+	except Exception as e:
+		errorMsg = "Error while refreshing wallet %s" %wallet_id
 		print errorMsg, e
 		return json.dumps({'Error' : errorMsg})
 

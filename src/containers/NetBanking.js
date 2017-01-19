@@ -22,6 +22,9 @@ export default class NetBanking extends Component {
 			var data = JSON.parse(data)
 			if(data.url){
 				sec_window.location.replace(data.url)
+			} else {
+				var url = "/handle_payment?order_id=" + this.props.orderId + "&status=FAILED"
+				sec_window.location.replace(url)
 			}
 		});
 

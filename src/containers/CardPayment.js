@@ -116,6 +116,9 @@ class ListCards extends Component {
 			var data = JSON.parse(data)
 			if(data.url) {
 				sec_window.location.replace(data.url)
+			} else {
+				var url = "/handle_payment?order_id=" + this.props.orderId + "&status=FAILED"
+				sec_window.location.replace(url)
 			}
 		});
 	}
@@ -204,6 +207,9 @@ class CardPaymentForm extends Component {
 			var data = JSON.parse(data)
 			if(data.url) {
 				sec_window.location.replace(data.url)
+			} else {
+				var url = "/handle_payment?order_id=" + this.props.orderId + "&status=FAILED"
+				sec_window.location.replace(url)
 			}
 		});
 	}
@@ -238,7 +244,7 @@ class CardPaymentForm extends Component {
 			                    <select className="form-control" style={{width: '20%',display: 'inline-block', marginLeft: '5px'}} onChange={this.handleCardYearChange} defaultValue="YYYY">
 			                      <option value="YYYY" className={styles.placeholder} disabled>YYYY</option>
 			                      {() => {
-			                       return this.range(2016,20).map((x) => {
+			                       return this.range(2017,20).map((x) => {
 			                         return <option key={x} value={x}>{x}</option>;
 			                       })
 			                      }()}

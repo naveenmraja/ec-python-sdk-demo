@@ -94,18 +94,51 @@
     border: 1.5px solid #0585DD;
 }
 
-:local .btnRefresh {
+:local .btnLink {
     display: inline-block;
-    float: right;
-    padding-top: 10px;
-    margin-right: 45%;
+    padding: 2px 5px;
+    margin-left: 10px;
+    margin-right: 5px;
+    border-radius: 2px;
     cursor: pointer;
     letter-spacing: 1px;
-    font-size: 14px;
+    font-size: 10px;
     text-align: center;
-    width: 30%;
+    height: 5%;
+    width: 15%;
+    color: #FFF;
     position: relative;
     font-family: 'Avenir LT W04_55 Roman1475524';
+    background: #0585DD;
+    border: 1.5px solid #0585DD;
+}
+
+:local .btnDelink {
+    display: inline-block;
+    padding: 2px 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    font-size: 10px;
+    text-align: center;
+    height: 5%;
+    width: 15%;
+    color: #FFF;
+    position: relative;
+    font-family: 'Avenir LT W04_55 Roman1475524';
+    background: #ff4d4d;
+    border: 1.5px solid #ff4d4d;
+}
+
+:local .btnRefresh {
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    position: relative;
     color: #62BF5D;
 }
 
@@ -145,6 +178,12 @@
     vertical-align: top;
     padding-right: 10px;
     margin-top: -20px;
+}
+
+:local .radioMargin {
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 :local .input:active {
@@ -199,3 +238,4 @@
   -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
