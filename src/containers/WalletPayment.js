@@ -413,7 +413,7 @@ class DirectDebit extends Component {
 			showLoader: true,
 			invalidCustomer: false,
 			customerId: null,
-			orderId: null,
+			orderId: this.props.orderId,
 			loaderTag : 'Fetching Wallets. Please Wait...'
 		}
 	}

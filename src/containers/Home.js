@@ -55,7 +55,6 @@ export default class Home extends Component {
 			$.get('/order_create',params, function(data){
 				var data = JSON.parse(data)
 				orderId = JSON.parse(data.order).order_id
-				console.log(orderId)
 				if(orderId) {
 					url = url.replace(':orderId',orderId)
 					window.location.href = url;
