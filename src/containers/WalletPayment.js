@@ -243,7 +243,7 @@ class CreateCustomer extends Component {
 	createCustomer = () => {
 		var validationError = null
 		if(this.state.customerId.length < 8) {
-			validationError = 'Customer id should not be lesser than 8 characters.'
+			validationError = 'Customer id should not be less than 8 characters.'
 		} else if(!this.state.customerPhone) {
 			validationError = 'Please enter the customer phone number'
 		} else if(!this.state.customerEmail) {
@@ -526,7 +526,7 @@ class DirectDebit extends Component {
 					<label className={styles.text}><input type="radio" disabled={this.state.invalidCustomer} name="directWalletsRadio" value="PAYTM"><img src={paytmLogo} style={{height: "35px", width: "100px", marginTop: "-5px"}} /></input></label>{paytmDispOptions}
 				</div>
 				<div className="form-group">
-				    	<button type="submit" className={styles.btnPri} onClick={this.handlePayment}>Continue</button>
+				    	<button type="submit" className={styles.btnPri} disabled={this.state.invalidCustomer} onClick={this.handlePayment}>Continue</button>
 				</div>
 			</div>
 			)
