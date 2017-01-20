@@ -5,6 +5,7 @@ import juspay
 from juspay import config
 from juspay import util
 import random
+import time
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -15,7 +16,7 @@ config.environment = 'sandbox'
 config.api_key = '3E69335A241F49DFAE9C023BAB73D312'
 
 def getCustomerId(): 
-	return "C" + str(random.randint(1000000,2000000))
+	return "C" + str(random.randint(1000000,9999999))
 
 @app.route("/",defaults={'path': ''})
 @app.route('/<path:path>')
@@ -31,7 +32,7 @@ def success():
 @app.route("/order_create")
 def create_order():
 	amount = request.args.get('amount')
-	order_id = "O" + str(random.randint(1000000,2000000))
+	order_id = "O" + str(random.randint(1000000,9999999))
 	cust_id = getCustomerId()
 	if request.args.get('customer_id'):
 		cust_id = request.args.get('customer_id')
