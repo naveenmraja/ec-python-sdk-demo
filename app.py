@@ -272,6 +272,20 @@ def create_txn():
 		print errorMsg
 	return json.dumps({'Error' : errorMsg})
 
+@app.route("/payment_methods")
+def payment_methods():
+	params = {}
+	url = '/merchants/' + merchant_id + '/paymentmethods'
+	print url
+	try:
+		response = util.request('GET', url, params).json()
+		print response
+		return json.dumps(response)
+	except Exception as e:
+		errorMsg = "Error while getting payment methods for %s" % merchant_id
+		print errorMsg, e
+		return json.dumps({'Error' : errorMsg})
+
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == "__main__":
