@@ -9,16 +9,7 @@ export default class Layout extends React.Component {
        <div className="app">
 			<div className="app__inner">
 				<Header history={this.props.history} location={this.props.location}/>
-				<ReactCSSTransitionGroup
-		            component="div"
-		            transitionName="example"
-		            transitionEnterTimeout={100}
-		            transitionLeaveTimeout={200}>
-
-		            {React.cloneElement(this.props.children, {
-		              key: this.props.location.pathname
-		            })}
-		        </ReactCSSTransitionGroup>
+				{this.props.children}
 			</div>
 			<div className="help-box">
 				<a href="tel:+918040959660"><div className="callUs">
